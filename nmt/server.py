@@ -1,6 +1,11 @@
 import os
+import sys
+import pickle
+import traceback
+import numpy as np
 import tensorflow as tf
 
+from utils import preprocess_sentence, pad
 from argparse import ArgumentParser
 from tensorflow.keras.models import load_model
 
@@ -50,12 +55,25 @@ def change_default_model():
     if(request.method=="POST"):
         try:
             model_name = request.form['model_name']
+            current_text = request.form['text']
+            fr_tokenizer = pickle.load(open("pickle/fr_tokenizer.pickle", "rb"))
+            current_text = preprocess_sentence(current_text, "pickle/en_tokenizer.pickle")
+
             default_model = load_nmt_model(model_name)
+            seq_len = default_model.inputs[0].shape[1]
+            current_text = pad(current_text, length=seq_len)
 
             print(f'[INFO] Default model changed to {model_name} ...')
             print(default_model.summary())
-            return 'success'
+            
+            translated = default_model.predict(current_text)
+            translated = np.argmax(translated, axis=-1)
+            translated = fr_tokenizer.sequences_to_texts(translated)[0]
+            translated = translated.replace('PAD', '').strip()
+
+            return translated
         except:
+            traceback.print_exc(file=sys.stdout)
             return 'fail'
 
 @app.route("/", methods=["GET"])
