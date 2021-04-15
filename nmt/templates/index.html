@@ -1,0 +1,38 @@
+<html>
+	<head>
+		<title>NMT Models API</title>
+		 <!-- Latest compiled and minified CSS -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+		<!-- jQuery library -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+		<!-- Latest compiled JavaScript -->
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script> 
+	
+		<!-- Custom Javascript and CSS -->
+		<script src="/static/utils.js"></script>
+	</head>
+
+	<body>
+		<form>
+			<label for="input-text-area">Input English Text</label><br/>
+			<textarea style='width:50%' id="input-text-area" rows="4" cols="50" class="form-control"></textarea>
+	
+			<br/>
+			<label for="model-selection">Select models</label><br/>
+			<select style='width:50%' id="model-selection" class='form-control'>
+				{%for name in model_names%}
+					<option value={{name}}>{{name}}</option>
+				{%endfor%}
+			</select>
+
+			<br/>
+			<label for="translated-text-area">French Translation</label>
+			<textarea style='width:50%' id="translated-text-area" rows="4" cols="50" class="form-control" readonly></textarea>
+
+			<br/>
+			<button id='translate-button' type="button" class='btn btn-primary'>Translate</button>
+		</form>
+	</body>
+</html>
